@@ -1,0 +1,68 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+from transformers import TFAutoModelForSequenceClassification, AutoTokenizer
+from sklearn.metrics import mean_squared_error
+
+# Load historical stock price data (replace with your own dataset)
+data = pd.read_csv('stock_data.csv')  # Replace 'stock_data.csv' with your data file
+
+# Extract the 'Close' prices as the target variable
+prices = data['Close'].values.reshape(-1, 1)
+
+# Normalize the data between 0 and 1
+scaler = MinMaxScaler()
+prices_normalized = scaler.fit_transform(prices)
+
+# Define a function to create sequences for LSTM training
+def create_sequences(data, seq_length):
+    X, y = [], []
+    for i in range(len(data) - seq_length):
+        X.append(data[i:i+seq_length])
+        y.append(data[i+seq_length])
+    return np.array(X), np.array(y)
+
+# Create sequences with a defined sequence length
+sequence_length = 10
+X, y = create_sequences(prices_normalized, sequence_length)
+
+# Split the data into training and testing sets
+split_ratio = 0.8
+split_index = int(len(X) * split_ratio)
+X_train, X_test = X[:split_index], X[split_index:]
+y_train, y_test = y[:split_index], y[split_index:]
+
+# Build a transformer-based LSTM model
+model = Sequential()
+model.add(TFAutoModelForSequenceClassification.from_pretrained("bert-base-uncased", return_dict=True))
+model.add(LSTM(units=50, return_sequences=True))
+model.add(LSTM(units=50))
+model.add(Dense(units=1))
+model.compile(optimizer='adam', loss='mean_squared_error')
+
+# Train the model
+model.fit(X_train, y_train, epochs=50, batch_size=32)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Inverse transform the normalized predictions to the original scale
+y_pred_original = scaler.inverse_transform(y_pred)
+y_test_original = scaler.inverse_transform(y_test)
+
+# Calculate performance metrics (e.g., Mean Squared Error)
+mse = mean_squared_error(y_test_original, y_pred_original)
+print(f"Mean Squared Error (MSE): {mse:.2f}")
+
+# Visualize the predictions
+plt.figure(figsize=(12, 6))
+plt.plot(y_test_original, label='Actual Prices', color='blue')
+plt.plot(y_pred_original, label='Predicted Prices', color='red')
+plt.title('Stock Price Prediction with Transformer and LSTM')
+plt.xlabel('Time')
+plt.ylabel('Stock Price')
+plt.legend()
+plt.show()
