@@ -1,0 +1,105 @@
+Stock Price Prediction with LSTM (Streamlit App)
+This is a Streamlit web application that allows users to predict stock prices using a Long Short-Term Memory (LSTM) neural network. Users can upload their own historical stock data in CSV format, configure various model parameters, train the LSTM model, and visualize the actual vs. predicted stock prices.
+
+Features
+CSV Upload: Easily upload your historical stock price data.
+
+Data Preview: View the first few rows of your uploaded dataset.
+
+Dynamic Parameter Adjustment: Control key LSTM model hyperparameters (sequence length, epochs, batch size, LSTM units, training split ratio) via interactive sliders in the sidebar.
+
+Model Training: Initiate model training with a single click.
+
+Training Loss Visualization: Observe the model's training loss over epochs.
+
+Performance Metrics: Get the Mean Squared Error (MSE) of the predictions.
+
+Interactive Prediction Plot: Visualize the actual stock prices against the model's predictions.
+
+Requirements
+To run this application, you need Python and the following libraries:
+
+streamlit
+
+numpy
+
+pandas
+
+matplotlib
+
+scikit-learn
+
+tensorflow
+
+You can install them using pip:
+
+pip install streamlit numpy pandas matplotlib scikit-learn tensorflow
+
+How to Run
+Save the Code: Save the provided Python code (from the streamlit_stock_predictor Canvas) as a Python file (e.g., app.py).
+
+Prepare Your Data: Ensure you have a CSV file containing historical stock prices. This file must have a column named 'Close' representing the closing price of the stock.
+
+Example CSV structure:
+
+Date,Open,High,Low,Close,Volume
+2023-01-01,100.0,102.5,99.5,101.0,100000
+2023-01-02,101.5,103.0,100.0,102.0,120000
+...
+
+Run the App: Open your terminal or command prompt, navigate to the directory where you saved app.py, and execute the following command:
+
+streamlit run app.py
+
+Access the App: Your default web browser will automatically open the Streamlit application (usually at http://localhost:8501).
+
+Usage
+Upload CSV: On the web interface, click the "Choose a CSV file" button and select your historical stock data CSV.
+
+Verify Data: Check the "Data Preview" to ensure your data is loaded correctly and the 'Close' column is recognized.
+
+Configure Parameters: Use the sliders in the left sidebar to adjust the model's hyperparameters:
+
+Sequence Length (Look-back days): How many past days the LSTM considers for predicting the next day's price.
+
+Epochs: The number of times the entire training dataset will be passed forward and backward through the neural network.
+
+Batch Size: The number of samples per gradient update during training.
+
+LSTM Units (Layer 1 & 2): The dimensionality of the output space of the LSTM layers.
+
+Training Data Split Ratio: The proportion of your data used for training vs. testing.
+
+Train Model: Click the "Train Model" button to start the training process. A spinner will indicate progress.
+
+Review Results: Once training is complete, you will see:
+
+Training Loss History: A plot showing how the model's error decreased during training.
+
+Mean Squared Error (MSE): A metric indicating the average squared difference between actual and predicted values on the test set.
+
+Visualization of Predictions: A plot comparing the actual stock prices from the test set with the prices predicted by the model.
+
+Model Architecture
+The application uses a Sequential Keras model with two LSTM layers followed by a Dense output layer:
+
+MinMaxScaler: Normalizes the input stock prices to a range between 0 and 1, which helps the neural network learn more effectively.
+
+create_sequences function: Transforms the flat time series data into sequences suitable for LSTM input, where each sequence represents a look-back window.
+
+LSTM(units=lstm_units_1, return_sequences=True): The first LSTM layer. return_sequences=True ensures that it outputs a sequence, allowing another LSTM layer to be stacked on top.
+
+LSTM(units=lstm_units_2): The second LSTM layer. It outputs a single value per input sequence, which is then fed to the Dense layer.
+
+Dense(units=1): A fully connected output layer that produces the single predicted stock price.
+
+Optimizer: Adam
+
+Loss Function: Mean Squared Error ('mean_squared_error')
+
+Important Notes
+Stock price prediction is inherently challenging and complex. This model is for demonstration and educational purposes only and should not be used for actual financial advice or investment decisions.
+
+Past performance of a stock is not necessarily indicative of future results.
+
+The accuracy of predictions heavily depends on the quality, quantity, and characteristics of the historical data provided, as well as the chosen model parameters.
