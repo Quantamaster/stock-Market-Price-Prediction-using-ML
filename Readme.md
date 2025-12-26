@@ -1,5 +1,7 @@
 Stock Price Prediction with LSTM (Streamlit App)
 This is a Streamlit web application that allows users to predict stock prices using a Long Short-Term Memory (LSTM) neural network. Users can upload their own historical stock data in CSV format, configure various model parameters, train the LSTM model, and visualize the actual vs. predicted stock prices.
+### Architecture
+![Architecture-](https://github.com/Quantamaster/stock-Market-Price-Prediction-using-ML/blob/main/Architecture-.png)
 
 Features
 CSV Upload: Easily upload your historical stock price data.
@@ -13,9 +15,11 @@ Model Training: Initiate model training with a single click.
 Training Loss Visualization: Observe the model's training loss over epochs.
 
 Performance Metrics: Get the Mean Squared Error (MSE) of the predictions.
-
 Interactive Prediction Plot: Visualize the actual stock prices against the model's predictions.
 
+### Pipeline  
+
+![Pipeline](https://github.com/Quantamaster/stock-Market-Price-Prediction-using-ML/blob/main/Pipeline.png)
 Requirements
 To run this application, you need Python and the following libraries:
 
